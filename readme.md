@@ -59,3 +59,38 @@ This plugin requires Firebase setup to work with push notifications.
 ---
 
 ## 📂 Folder Structure
+wc-admin-push-notifications/
+│── admin/
+│ └── admin-settings.php
+│── assets/
+│ └── js/admin.js
+│── includes/
+│ └── class-wc-push-notification.php
+│── wc-admin-push-notifications.php
+│── readme.md
+
+---
+
+## 🛠️ Development Notes
+- Uses **Firebase Cloud Messaging (FCM)** for push delivery.
+- Built with **WordPress Settings API** for storing credentials.
+- JavaScript (no jQuery dependency) for admin panel interactivity.
+
+---
+
+## 🤝 Contributing
+1. Fork the repo
+2. Create a new branch (`feature/new-feature`)
+3. Commit your changes
+4. Push and create a Pull Request
+
+---
+
+## 📜 License
+This plugin is licensed under the **GPL-2.0+** license.
+
+---
+
+## 👨‍💻 Author
+Developed by **Ravi Patel**  
+GitHub: [ravi1421patel](https://github.com/ravi1421patel)
