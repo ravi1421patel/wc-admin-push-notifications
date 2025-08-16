@@ -1,34 +1,125 @@
-=== WooCommerce Admin Push Notifications ===
-Contributors: casey
-Tags: woocommerce, push, notifications, admin, firebase
-Requires at least: 5.8
-Tested up to: 6.6
-Requires PHP: 7.4
-Stable tag: 1.0.0
-License: GPLv2 or later
-License URI: https://www.gnu.org/licenses/gpl-2.0.html
+WC Admin Push Notifications
 
-Send browser push notifications to Administrators and Shop Managers for WooCommerce events (new order, payment complete) using Firebase Cloud Messaging.
+A WordPress plugin that enables real-time push notifications for WooCommerce store administrators using Firebase Cloud Messaging (FCM).
 
-== Description ==
-- Choose events (new order, payment completed).
-- Works with Firebase Cloud Messaging (copy your Server Key, VAPID public key, and Web App config JSON).
-- Saves admin FCM tokens when they allow notifications in the WP Admin.
-- Test button to send a sample push.
+🚀 Features
 
-== Installation ==
-1. Upload the plugin folder to `/wp-content/plugins/` or install the ZIP from Plugins → Add New → Upload.
-2. Activate the plugin.
-3. Visit **Settings → WC Push Notifications** and paste:
-   - FCM Server Key
-   - VAPID Public Key
-   - Firebase Web App Config JSON
-4. While logged in as admin, accept the browser notification prompt in WP Admin (this saves your token).
-5. Click **Send Test**.
+Instant push notifications for WooCommerce events (new order, low stock, etc.).
 
-== Notes ==
-- On activation, the plugin attempts to copy `firebase-messaging-sw.js` to your site root for widest scope. If it fails, copy it manually from the plugin folder to your WordPress root (same folder as wp-config.php).
+Firebase Cloud Messaging (FCM) integration.
 
-== Changelog ==
-= 1.0.0 =
-* Initial release.
+Works in background and foreground.
+
+Easy configuration from WordPress admin.
+
+📦 Installation
+
+Download or clone the plugin into your WordPress wp-content/plugins/ directory:
+
+git clone https://github.com/yourusername/wc-admin-push-notifications.git
+
+
+Activate the plugin from WordPress Admin > Plugins.
+
+🔑 Firebase Setup
+
+Go to Firebase Console.
+
+Create a new Firebase project.
+
+Navigate to Project Settings > General > Your apps.
+
+Add a Web App.
+
+Copy the apiKey, authDomain, projectId, storageBucket, messagingSenderId, and appId.
+
+In Firebase, go to Project Settings > Cloud Messaging and note down the Server Key.
+
+⚙️ Plugin Configuration
+
+In WordPress, go to Settings > WC Push Notifications.
+
+Enter your Firebase project credentials:
+
+API Key
+
+Auth Domain
+
+Project ID
+
+Messaging Sender ID
+
+App ID
+
+VAPID Key (optional)
+
+Save settings.
+
+📂 Firebase Service Worker Setup
+
+⚠️ Important: Firebase requires a firebase-messaging-sw.js file to be placed in the root directory of your website.
+
+Create a file in your WordPress root (same place as wp-config.php):
+
+/public_html/
+  ├── wp-admin/
+  ├── wp-content/
+  ├── wp-includes/
+  ├── firebase-messaging-sw.js   ✅
+  └── wp-config.php
+
+
+Add the following code inside firebase-messaging-sw.js:
+
+// Import Firebase
+importScripts('https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js');
+importScripts('https://www.gstatic.com/firebasejs/9.6.1/firebase-messaging.js');
+
+// Your Firebase config (must match plugin settings)
+firebase.initializeApp({
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT_ID.appspot.com",
+  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+  appId: "YOUR_APP_ID",
+});
+
+// Retrieve messaging instance
+const messaging = firebase.messaging();
+
+messaging.onBackgroundMessage(function(payload) {
+  console.log('[firebase-messaging-sw.js] Received background message ', payload);
+
+  const notificationTitle = payload.notification.title;
+  const notificationOptions = {
+    body: payload.notification.body,
+    icon: '/wp-content/plugins/wc-admin-push-notifications/assets/icon.png'
+  };
+
+  self.registration.showNotification(notificationTitle, notificationOptions);
+});
+
+🔔 Usage
+
+After setup, your WooCommerce store will automatically send push notifications to admins when:
+
+New orders are placed.
+
+Stock is low.
+
+Order status changes.
+
+📸 Screenshots
+
+(Add your screenshots in /assets and reference them here)
+Example:
+
+
+🤝 Contributing
+
+Pull requests are welcome! Please open an issue first to discuss major changes.
+
+📄 License
+
+This project is licensed under the MIT License.
